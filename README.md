@@ -15,26 +15,28 @@ resources:
 - name: repo-mr
   type: merge-request
   source:
-    uri: https://gitlab.com/myname/myproject.git
+    repo_uri: git@gitlab.com:8080/myname/myproject.git
+    web_uri: https://gitlab.com/myname/myproject.git
     private_token: XXX
     username: my_username
     password: xxx
 ```
 
-* `uri`: The location of the repository (required)
+* `repo_uri`: The location of the repository (required)
+* `web_uri`: The location of the web interface of the repository (required)
 * `private_token`: Your GitLab user's private token (required, can be found in your profile settings)
 * `private_key`: The private SSH key for SSH auth when pulling
 
-    Example:
+  Example:
 
-    ```yaml
-    private_key: |
-      -----BEGIN RSA PRIVATE KEY-----
-      MIIEowIBAAKCAQEAtCS10/f7W7lkQaSgD/mVeaSOvSF9ql4hf/zfMwfVGgHWjj+W
-      <Lots more text>
-      DWiJL+OFeg9kawcUL6hQ8JeXPhlImG6RTUffma9+iGQyyBMCGd1l
-      -----END RSA PRIVATE KEY-----
-    ```
+  ```yaml
+  private_key: |
+    -----BEGIN RSA PRIVATE KEY-----
+    MIIEowIBAAKCAQEAtCS10/f7W7lkQaSgD/mVeaSOvSF9ql4hf/zfMwfVGgHWjj+W
+    <Lots more text>
+    DWiJL+OFeg9kawcUL6hQ8JeXPhlImG6RTUffma9+iGQyyBMCGd1l
+    -----END RSA PRIVATE KEY-----
+  ```
 
 * `username`: The username for HTTP(S) auth when pulling
 * `password`: The password for HTTP(S) auth when pulling

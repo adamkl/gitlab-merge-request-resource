@@ -16,19 +16,19 @@ cat > "${payload}" <&0
 
 configure_ssl_verification "${payload}"
 
-uri="$(jq -r '.source.uri // ""' < "${payload}")"
+web_uri="$(jq -r '.source.web_uri // ""' < "${payload}")"
 private_token="$(jq -r '.source.private_token // ""' < "${payload}")"
 no_ssl="$(jq -r '.source.no_ssl // ""' < "${payload}")"
 version_sha="$(jq -r '.version.sha // ""' < "${payload}")"
 
-if [[ "${uri}" == "git@"* ]]; then
-  gitlab_host="$(echo "${uri}" | sed -rn 's/git@(.*):(.*)\.git/\1/p')"
-  project_path="$(echo "${uri}" | sed -rn 's/git@(.*):(.*)\.git/\2/p')"
+if [[ "${web_uri}" == "git@"* ]]; then
+  gitlab_host="$(echo "${web_uri}" | sed -rn 's/git@(.*):(.*)\.git/\1/p')"
+  project_path="$(echo "${web_uri}" | sed -rn 's/git@(.*):(.*)\.git/\2/p')"
   protocol='https'
 else
-  gitlab_host="$(echo "${uri}" | sed -rn 's/(https?):\/\/([^\/]*)\/(.*)\.git/\2/p')"
-  project_path="$(echo "${uri}" | sed -rn 's/(https?):\/\/([^\/]*)\/(.*)\.git/\3/p')"
-  protocol="$(echo "${uri}" | sed -rn 's/(https?):\/\/([^\/]*)\/(.*)\.git/\1/p')"
+  gitlab_host="$(echo "${web_uri}" | sed -rn 's/(https?):\/\/([^\/]*)\/(.*)\.git/\2/p')"
+  project_path="$(echo "${web_uri}" | sed -rn 's/(https?):\/\/([^\/]*)\/(.*)\.git/\3/p')"
+  protocol="$(echo "${web_uri}" | sed -rn 's/(https?):\/\/([^\/]*)\/(.*)\.git/\1/p')"
 fi
 
 if [ "${no_ssl}" == 'true' ]; then

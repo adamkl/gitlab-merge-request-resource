@@ -23,7 +23,7 @@ cat > "${payload}" <&0
 
 configure_ssl_verification "${payload}"
 
-uri="$(jq -r '.source.uri // ""' < "${payload}")"
+web_uri="$(jq -r '.source.repo_uri // ""' < "${payload}")"
 username="$(jq -r '.source.username // ""' < "${payload}")"
 password="$(jq -r '.source.password // ""' < "${payload}")"
 private_key="$(jq -r '.source.private_key // ""' < "${payload}")"
@@ -31,7 +31,7 @@ version="$(jq -r '.version // ""' < "${payload}")"
 commit_sha="$(echo "${version}" | jq -r '.sha // ""')"
 
 if [[ ! -z "${private_key}" ]]; then
-    gitlab_host="$(echo "${uri}" | sed -rn 's/git@(.*):(.*)\.git/\1/p')"
+    gitlab_host="$(echo "${web_uri}" | sed -rn 's/git@(.*):(.*)\.git/\1/p')"
 
     id_rsa="${HOME}/.ssh/id_rsa"
     mkdir -p "${HOME}/.ssh/"
@@ -42,7 +42,7 @@ else
     echo "default login ${username} password ${password}" > "${HOME}/.netrc" # Save credentials for git push below
 fi
 
-git clone "${uri}" "${destination}"
+git clone "${web_uri}" "${destination}"
 
 cd "${destination}"
 
