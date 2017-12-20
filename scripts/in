@@ -31,7 +31,7 @@ version="$(jq -r '.version // ""' < "${payload}")"
 commit_sha="$(echo "${version}" | jq -r '.sha // ""')"
 
 if [[ ! -z "${private_key}" ]]; then
-    gitlab_host="$(echo "${repo_uri}" | sed -rn 's/git@(.*):(.*)\.git/\1/p')"
+    gitlab_host="$(echo "${repo_uri}" | sed -rn 's/git@(.*):(.*)\.git/\1:\2/p')"
 
     id_rsa="${HOME}/.ssh/id_rsa"
     mkdir -p "${HOME}/.ssh/"
