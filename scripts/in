@@ -42,7 +42,7 @@ else
     echo "default login ${username} password ${password}" > "${HOME}/.netrc" # Save credentials for git push below
 fi
 
-git clone "${repo_uri}" "${destination}"
+git clone ssh://"${repo_uri}" "${destination}"
 
 cd "${destination}"
 
