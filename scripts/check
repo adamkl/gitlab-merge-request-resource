@@ -13,7 +13,7 @@ source "$(dirname "$0")/common.sh"
 payload="$(mktemp "${TMPDIR}/gitlab-merge-request-resource.XXXXXX")"
 
 cat > "${payload}" <&0
-
+echo "${payload}"
 configure_ssl_verification "${payload}"
 
 web_uri="$(jq -r '.source.web_uri // ""' < "${payload}")"
