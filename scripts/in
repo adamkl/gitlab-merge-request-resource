@@ -32,7 +32,7 @@ commit_sha="$(echo "${version}" | jq -r '.sha // ""')"
 
 if [[ ! -z "${private_key}" ]]; then
     gitlab_host="$(echo "${repo_uri}" | sed -rn 's/git@(.*):(.*)\/(.*)\.git/\1/p')"
-    gitlab_port="$(echo "${repo_uri}" | sed -rn 's/git@(.*):(.*)\/(.*)\.git/\2/p')"
+    gitlab_port="$(echo "${repo_uri}" | sed -rn 's/git@(.*):([^\/]*)\/(.*)\.git/\2/p')"
     id_rsa="${HOME}/.ssh/id_rsa"
     mkdir -p "${HOME}/.ssh/"
     echo "${private_key}" > "${id_rsa}"
