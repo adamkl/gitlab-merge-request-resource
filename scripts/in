@@ -38,6 +38,7 @@ if [[ ! -z "${private_key}" ]]; then
     echo "${private_key}" > "${id_rsa}"
     chmod 500 "${id_rsa}"
     ssh-keyscan -t rsa "${gitlab_host}" > "${HOME}/.ssh/known_hosts"
+    cat "${HOME}/.ssh/known_hosts"
 else
     echo "default login ${username} password ${password}" > "${HOME}/.netrc" # Save credentials for git push below
 fi
