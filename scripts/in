@@ -53,6 +53,7 @@ git clone "${uri}" "${destination}"
 cd "${destination}"
 
 git reset --hard "${commit_sha}"
+git submodule update
 
 jq -n "{
     version: ${version},
