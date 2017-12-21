@@ -40,17 +40,20 @@ if [ -z "${new_status}" ]; then
     exit 1
 fi
 
-gitlab_host=''
-project_path=''
-protocol='https'
-if [[ ! -z "${private_key}" ]]; then
-    gitlab_host="$(echo "${uri}" | sed -rn 's/git@(.*):(.*)\.git/\1/p')"
-    project_path="$(echo "${uri}" | sed -rn 's/git@(.*):(.*)\.git/\2/p')"
+if [[ "${uri}" == "git@"* ]]; then
+  gitlab_host="$(echo "${uri}" | sed -rn 's/git@(.*):(.*)\.git/\1/p')"
+  project_path="$(echo "${uri}" | sed -rn 's/git@(.*):(.*)\.git/\2/p')"
+  protocol='https'
+else if [[ "${uri}" == "ssh://"* ]]; then
+  gitlab_host=$"$(echo "${uri}" | sed -rn 's/ssh:\/\/git@([^\/:]*).*\.git/\1/p')"
+  project_path=$"$(echo "${uri}" | sed -rn 's/ssh:\/\/git@[^\/:]*\/(.*)\.git/\1/p')"
+  protocol='https'
 else
-    gitlab_host="$(echo "${uri}" | sed -rn 's/(https?):\/\/([^\/]*)\/(.*)\.git/\2/p')"
-    project_path="$(echo "${uri}" | sed -rn 's/(https?):\/\/([^\/]*)\/(.*)\.git/\3/p')"
-    protocol="$(echo "${uri}" | sed -rn 's/(https?):\/\/([^\/]*)\/(.*)\.git/\1/p')"
+  gitlab_host="$(echo "${uri}" | sed -rn 's/(https?):\/\/([^\/]*)\/(.*)\.git/\2/p')"
+  project_path="$(echo "${uri}" | sed -rn 's/(https?):\/\/([^\/]*)\/(.*)\.git/\3/p')"
+  protocol="$(echo "${uri}" | sed -rn 's/(https?):\/\/([^\/]*)\/(.*)\.git/\1/p')"
 fi
+
 if [ "${no_ssl}" == 'true' ]; then
     protocol='http'
 fi

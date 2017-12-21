@@ -31,8 +31,11 @@ version="$(jq -r '.version // ""' < "${payload}")"
 commit_sha="$(echo "${version}" | jq -r '.sha // ""')"
 
 if [[ ! -z "${private_key}" ]]; then
-    gitlab_host="$(echo "${uri}" | sed -rn 's/git@(.*):(.*)\.git/\1/p')"
-
+    if [[ "${uri}" == "ssh://"* ]]; then
+        gitlab_host=$"$(echo "${uri}" | sed -rn 's/(ssh:\/\/)git@([^\/]*)\/.*\.git/\2/p')" #grabs port if exists
+    else
+        gitlab_host=$"$(echo "${uri}" | sed -rn 's/git@(.*):(.*)\.git/\1/p')"
+    fi
     id_rsa="${HOME}/.ssh/id_rsa"
     mkdir -p "${HOME}/.ssh/"
     echo "${private_key}" > "${id_rsa}"
