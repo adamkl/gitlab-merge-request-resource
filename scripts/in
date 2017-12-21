@@ -31,8 +31,11 @@ version="$(jq -r '.version // ""' < "${payload}")"
 commit_sha="$(echo "${version}" | jq -r '.sha // ""')"
 
 if [[ ! -z "${private_key}" ]]; then
+    port_args="-p 22"
     if [[ "${uri}" == "ssh://"* ]]; then
-        gitlab_host=$"$(echo "${uri}" | sed -rn 's/(ssh:\/\/)git@([^\/]*)\/.*\.git/\2/p')" #grabs port if exists
+        gitlab_host=$"$(echo "${uri}" | sed -rn 's/ssh:\/\/git@([^\/:]*)(:([^\/]*))?\/(.*)\.git/\1/p')"
+        gitlab_port=$"$(echo "${uri}" | sed -rn 's/ssh:\/\/git@([^\/:]*)(:([^\/]*))?\/(.*)\.git/\3/p')"
+        port_args="-p ${gitlab_port}"
     else
         gitlab_host=$"$(echo "${uri}" | sed -rn 's/git@(.*):(.*)\.git/\1/p')"
     fi
@@ -40,7 +43,7 @@ if [[ ! -z "${private_key}" ]]; then
     mkdir -p "${HOME}/.ssh/"
     echo "${private_key}" > "${id_rsa}"
     chmod 500 "${id_rsa}"
-    ssh-keyscan -t rsa "${gitlab_host}" > "${HOME}/.ssh/known_hosts"
+    ssh-keyscan -t rsa $port_args "${gitlab_host}" > "${HOME}/.ssh/known_hosts"
 else
     echo "default login ${username} password ${password}" > "${HOME}/.netrc" # Save credentials for git push below
 fi

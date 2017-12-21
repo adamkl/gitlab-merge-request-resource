@@ -26,8 +26,8 @@ if [[ "${uri}" == "git@"* ]]; then
   project_path="$(echo "${uri}" | sed -rn 's/git@(.*):(.*)\.git/\2/p')"
   protocol='https'
 elif [[ "${uri}" == "ssh://"* ]]; then
-  gitlab_host=$"$(echo "${uri}" | sed -rn 's/ssh:\/\/git@([^\/:]*).*\.git/\1/p')"
-  project_path=$"$(echo "${uri}" | sed -rn 's/ssh:\/\/git@[^\/:]*(:([^\/]*))?\/(.*)\.git/\3/p')"
+  gitlab_host=$"$(echo "${uri}" | sed -rn 's/ssh:\/\/git@([^\/:]*)(:([^\/]*))?\/(.*)\.git/\1/p')"
+  project_path=$"$(echo "${uri}" | sed -rn 's/ssh:\/\/git@([^\/:]*)(:([^\/]*))?\/(.*)\.git/\4/p')"
   protocol='https'
 else
   gitlab_host="$(echo "${uri}" | sed -rn 's/(https?):\/\/([^\/]*)\/(.*)\.git/\2/p')"
