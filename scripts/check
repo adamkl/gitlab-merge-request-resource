@@ -43,8 +43,8 @@ version_updated_at=0
 if [ ! -z "${version_sha}" ]; then
     version_curl_resp="$(curl -s -H "private-token: ${private_token}" "${protocol}://${gitlab_host}/api/v4/projects/$(urlencode "${project_path}")/repository/commits/${version_sha}")"
     version_updated_at_uncorrected="$(echo "${version_curl_resp}" | jq '.committed_date|.[:19]|strptime("%Y-%m-%dT%H:%M:%S")')"
-    version_tzHour="$(echo "${version_curl_resp}"  | jq '.commited_date|.[23:26] | tonumber')"
-    version_tzMin="$(echo "${version_curl_resp}" | jq '.commited_date|.[27:] | tonumber')"
+    version_tzHour="$(echo "${version_curl_resp}"  | jq '.committed_date|.[23:26] | tonumber')"
+    version_tzMin="$(echo "${version_curl_resp}" | jq '.committed_date|.[27:] | tonumber')"
     version_updated_at_corrected_hour="$(echo "${version_updated_at_uncorrected}" | jq --argjson offset $version_tzHour '.[3] = .[3] + $offset')"
     version_updated_at_corrected_hour_and_min="$(echo "${version_updated_at_corrected_hour}" | jq --argjson offset $version_tzMin '.[4] = .[4] + $offset')"
     version_updated_at="$(echo "${version_updated_at_corrected_hour_and_min}" | jq '.|mktime')"
@@ -61,8 +61,8 @@ for i in $(seq 0 $((num_mrs - 1))); do
     if [ "${mr_sha}" != "null" ]; then
         mr_curl_resp="$(curl -s -H "private-token: ${private_token}" "${protocol}://${gitlab_host}/api/v4/projects/$(urlencode "${project_path}")/repository/commits/${mr_sha}")"
         mr_updated_at_uncorrected="$(echo "${mr_curl_resp}" | jq '.committed_date|.[:19]|strptime("%Y-%m-%dT%H:%M:%S")|mktime')"
-        mr_tzHour="$(echo "${mr_curl_resp}"  | jq '.commited_date|.[23:26] | tonumber')"
-        mr_tzMin="$(echo "${mr_curl_resp}" | jq '.commited_date|.[27:] | tonumber')"
+        mr_tzHour="$(echo "${mr_curl_resp}"  | jq '.committed_date|.[23:26] | tonumber')"
+        mr_tzMin="$(echo "${mr_curl_resp}" | jq '.committed_date|.[27:] | tonumber')"
         mr_updated_at_corrected_hour="$(echo "${mr_updated_at_uncorrected}" | jq --argjson offset $mr_tzHour '.[3] = .[3] + $offset')"
         mr_updated_at_corrected_hour_and_min="$(echo "${mr_updated_at_corrected_hour}" | jq --argjson offset $mr_tzMin '.[4] = .[4] + $offset')"
         mr_updated_at="$(echo "${mr_updated_at_corrected_hour_and_min}" | jq '.|mktime')"
